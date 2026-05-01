@@ -1,0 +1,14 @@
+{
+  "name": "kurban-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "http-server . -p 8080"
+  },
+  "dependencies": {
+    "jose": "^5.9.6"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

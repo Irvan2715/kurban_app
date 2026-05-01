@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Kurban Digital · Panitia</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" type="image/png" href="../assets/images/logo/logo-bnt.webp">
+  <style>
+    /* ── BACKGROUND FOTO ── */
+    body.user-frame {
+      background: #0a1628 !important;
+      position: relative;
+    }
+    body.user-frame::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url('../assets/images/bg_desktop/user_portal_qurban_bnt.webp');
+      background-size: cover; background-position: center;
+    }
+    body.user-frame::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background: linear-gradient(135deg, rgba(10,22,40,0.9) 0%, rgba(15,44,86,0.85) 100%);
+    }
+    @media (max-width: 900px) {
+      body.user-frame::before {
+        background-image: url('../assets/images/bg_mobile/user_mobile_qurban_bnt.webp');
+        background-position: top center;
+      }
+    }
+    .phone-shell { position: relative; z-index: 1; }
+
+    /* ── PHONE SHELL ── */
+    .phone-shell {
+      width: 100%; margin: 0 auto;
+      background: rgba(255,255,255,0.04) !important;
+      backdrop-filter: blur(2px);
+      border: 1px solid rgba(255,255,255,0.1) !important;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5) !important;
+    }
+
+    /* Mobile: phone shell centered, max 480px */
+    @media (max-width: 899px) {
+      body.user-frame { padding: 16px; display: flex; justify-content: center; }
+      .phone-shell { max-width: 480px; border-radius: 28px !important; }
+    }
+
+    /* Desktop: full screen layout */
+    @media (min-width: 900px) {
+      body.user-frame {
+        padding: 0 !important;
+        display: block !important;
+        min-height: 100vh;
+      }
+      .phone-shell {
+        max-width: 100% !important;
+        width: 100% !important;
+        min-height: 100vh;
+        border-radius: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        display: grid !important;
+        grid-template-columns: 320px 1fr !important;
+        grid-template-rows: auto 1fr !important;
+        background: transparent !important;
+        backdrop-filter: none !important;
+      }
+
+      /* Header spans full width on desktop */
+      .u-header {
+        grid-column: 1 / -1;
+        padding: 20px 40px 36px !important;
+        background:
+          linear-gradient(150deg, rgba(10,22,40,0.82) 0%, rgba(15,44,86,0.75) 55%, rgba(26,74,138,0.78) 100%),
+          url('../assets/images/bg_desktop/user_portal_qurban_bnt.webp') center/cover no-repeat !important;
+      }
+      .u-header::after { display: none; } /* remove wave */
+      .u-topbar { margin-bottom: 12px; }
+      .u-kpi { gap: 16px; }
+      .u-kpi-item { padding: 14px 20px; }
+      .u-kpi-num { font-size: 28px; }
+
+      /* Left sidebar: beranda only */
+      .u-content {
+        grid-column: 1;
+        grid-row: 2;
+        padding: 24px 20px 24px 32px !important;
+        overflow-y: auto;
+        height: calc(100vh - 160px);
+        border-right: 1px solid rgba(255,255,255,0.08);
+      }
+
+      /* Beranda always visible on desktop */
+      #screen-beranda {
+        display: flex !important;
+        flex-direction: column;
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+      }
+
+      /* Right panel wrapper */
+      .u-right-panel {
+        grid-column: 2;
+        grid-row: 2;
+        overflow-y: auto;
+        height: calc(100vh - 160px);
+        padding: 24px 32px 24px 24px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Right panel screens */
+      .u-right-panel .screen {
+        display: none;
+        flex-direction: column;
+        flex: 1;
+      }
+      .u-right-panel .screen.active {
+        display: flex !important;
+        animation: screenFadeIn 0.3s ease forwards;
+      }
+
+      /* Desktop right panel empty state */
+      .desktop-right-placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 12px;
+        flex: 1;
+        color: rgba(255,255,255,0.2);
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .desktop-right-placeholder i { font-size: 48px; opacity: 0.3; }
+      /* Hide placeholder when a screen is active */
+      .u-right-panel:has(.screen.active) .desktop-right-placeholder { display: none !important; }
+    }
+
+    @media (min-width: 1200px) {
+      .phone-shell { grid-template-columns: 360px 1fr !important; }
+    }
+
+    /* ── HEADER ── */
+    .u-header {
+      background:
+        linear-gradient(150deg, rgba(10,22,40,0.7) 0%, rgba(15,44,86,0.6) 55%, rgba(26,74,138,0.65) 100%),
+        url('../assets/images/bg_desktop/user_portal_qurban_bnt.webp') center/cover no-repeat !important;
+      backdrop-filter: blur(8px);
+    }
+
+    /* ── CONTENT AREA ── */
+    .u-content { background: transparent !important; }
+
+    /* ── CARDS ── */
+    .ucard {
+      background: rgba(255,255,255,0.1) !important;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.15) !important;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2) !important;
+    }
+    .card-title { color: white !important; }
+    .see-all { color: #00A2EA !important; }
+
+    /* ── PHASE CARD ── */
+    .phase-card {
+      background: rgba(255,255,255,0.08) !important;
+      border: 1px solid rgba(255,255,255,0.12) !important;
+    }
+
+    /* ── HEWAN ROWS ── */
+    .a-row { border-bottom-color: rgba(255,255,255,0.08) !important; }
+    .a-row:hover { background: rgba(255,255,255,0.05) !important; }
+    .a-ava { background: rgba(44,112,183,0.3) !important; }
+    .aname { color: white !important; }
+    .asub { color: rgba(255,255,255,0.5) !important; }
+
+    /* ── SEARCH BOX ── */
+    .search-box {
+      background: rgba(255,255,255,0.1) !important;
+      border-color: rgba(255,255,255,0.15) !important;
+      backdrop-filter: blur(8px);
+    }
+    .search-box input { color: white !important; }
+    .search-box input::placeholder { color: rgba(255,255,255,0.35) !important; }
+    .search-box i { color: rgba(255,255,255,0.4) !important; }
+
+    /* ── QUICK ACTION BUTTONS ── */
+    .qa-btn {
+      background: rgba(255,255,255,0.1) !important;
+      border-color: rgba(255,255,255,0.15) !important;
+      color: white !important;
+      backdrop-filter: blur(8px);
+    }
+    .qa-btn:hover { background: rgba(44,112,183,0.3) !important; border-color: rgba(44,112,183,0.5) !important; }
+    .qa-btn.qa-btn-green:hover { background: rgba(34,197,94,0.2) !important; border-color: rgba(34,197,94,0.4) !important; }
+
+    /* ── DETAIL ROWS ── */
+    .detail-grid { display: flex; flex-direction: column; }
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+    }
+    .detail-row:last-child { border-bottom: none !important; }
+    .detail-label {
+      color: rgba(255,255,255,0.5) !important;
+      font-size: 13px;
+      font-weight: 600;
+      flex-shrink: 0;
+      min-width: 72px;
+    }
+    .detail-value {
+      color: white !important;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: right;
+      word-break: break-word;
+    }
+
+    /* ── STATUS ITEMS ── */
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+    }
+    .status-item:last-child { border-bottom: none !important; }
+    .status-item i { font-size: 20px; color: rgba(255,255,255,0.35); flex-shrink: 0; }
+    .status-item.done i { color: #22c55e; }
+    .status-item span { color: rgba(255,255,255,0.85) !important; font-size: 14px; }
+    .status-date { margin-left: auto; font-size: 12px; color: rgba(255,255,255,0.4) !important; white-space: nowrap; }
+
+    /* ── UPLOAD AREA ── */
+    .upload-area {
+      background: rgba(255,255,255,0.06) !important;
+      border-color: rgba(255,255,255,0.2) !important;
+      color: rgba(255,255,255,0.7) !important;
+    }
+    .upload-area:hover { border-color: #00A2EA !important; }
+
+    /* ── FIELD SELECT ── */
+    .field {
+      background: rgba(255,255,255,0.1) !important;
+      border-color: rgba(255,255,255,0.2) !important;
+      color: white !important;
+    }
+    .field:focus { border-color: #00A2EA !important; background: rgba(255,255,255,0.15) !important; }
+
+    /* Dropdown options — dark theme */
+    select.field option {
+      background: #0f2c56;
+      color: white;
+    }
+    select.field option:hover,
+    select.field option:checked {
+      background: #2C70B7;
+      color: white;
+    }
+    /* Force dark background on select in all browsers */
+    select.field {
+      color-scheme: dark;
+    }
+
+    /* ── CUSTOM FILTER DROPDOWN (user) ── */
+    .filter-select-wrap {
+      position: relative; flex: 1; min-width: 100px;
+    }
+    .filter-select-btn {
+      width: 100%; padding: 9px 28px 9px 12px;
+      background: rgba(255,255,255,0.1);
+      border: 1.5px solid rgba(255,255,255,0.18);
+      border-radius: 100px; color: white;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px; font-weight: 600;
+      cursor: pointer; text-align: left;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      transition: all 0.2s; display: flex; align-items: center; justify-content: space-between; gap: 4px;
+    }
+    .filter-select-btn:hover { background: rgba(255,255,255,0.16); }
+    .filter-select-btn.open { border-color: #00A2EA; background: rgba(0,162,234,0.15); }
+    .filter-select-btn i { font-size: 13px; opacity: 0.6; flex-shrink: 0; transition: transform 0.2s; }
+    .filter-select-btn.open i { transform: rotate(180deg); }
+    .filter-dropdown {
+      display: none; position: absolute; top: calc(100% + 6px); left: 0;
+      min-width: 100%; max-height: 200px; overflow-y: auto;
+      background: #0f2c56; border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 14px; z-index: 200;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5); padding: 6px;
+    }
+    .filter-dropdown.open { display: block; animation: fdFadeIn 0.15s ease; }
+    @keyframes fdFadeIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .filter-option {
+      padding: 9px 12px; border-radius: 8px;
+      font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.8);
+      cursor: pointer; transition: background 0.15s; white-space: nowrap;
+    }
+    .filter-option:hover { background: rgba(255,255,255,0.1); color: white; }
+    .filter-option.selected { background: rgba(0,162,234,0.25); color: #00A2EA; }
+    .filter-dropdown::-webkit-scrollbar { width: 4px; }
+    .filter-dropdown::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+
+    /* ── PROFIL CARDS ── */
+    .perf-card {
+      background: rgba(255,255,255,0.1) !important;
+      border-color: rgba(255,255,255,0.12) !important;
+      backdrop-filter: blur(8px);
+    }
+    .perf-title { color: rgba(255,255,255,0.6) !important; }
+    .perf-num { color: #00A2EA !important; }
+    .perf-lbl { color: rgba(255,255,255,0.4) !important; }
+    .instansi-item { border-bottom-color: rgba(255,255,255,0.08) !important; color: rgba(255,255,255,0.75) !important; }
+    #profileUsername, #profileEmail, #profileRole { color: white !important; }
+
+    /* ── RIWAYAT DOK ── */
+    .instansi-item a { color: #00A2EA !important; }
+
+    /* ── SCREEN TRANSITION ── */
+    .screen.active {
+      display: flex;
+      animation: screenFadeIn 0.3s ease forwards;
+    }
+    @keyframes screenFadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Upload Area */
+    .upload-area {
+      border: 2px dashed rgba(255,255,255,0.2);
+      border-radius: 16px;
+      padding: 32px 16px;
+      text-align: center;
+      background: rgba(255,255,255,0.06);
+      cursor: pointer;
+      transition: border 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .upload-area:hover { border-color: #00A2EA !important; }
+    .upload-area i { font-size: 40px; color: rgba(255,255,255,0.6); }
+    .upload-area div { color: rgba(255,255,255,0.8); font-weight: 600; font-size: 14px; }
+    .upload-area div:last-child { font-size: 12px; color: rgba(255,255,255,0.35); }
+
+    /* Upload Tabs */
+    .upload-tab {
+      flex: 1; padding: 12px 8px;
+      background: rgba(255,255,255,0.08);
+      border: 1.5px solid rgba(255,255,255,0.15); border-radius: 100px;
+      font-weight: 600; color: rgba(255,255,255,0.6); cursor: pointer;
+      transition: all 0.2s; display: flex; align-items: center;
+      justify-content: center; gap: 6px;
+    }
+    .upload-tab.active {
+      background: #2C70B7; color: white; border-color: #2C70B7;
+      box-shadow: 0 4px 12px rgba(44,112,183,0.4);
+    }
+    .upload-tab.disabled { opacity: 0.35; pointer-events: none; }
+
+    /* Logout Button */
+    .btn-logout {
+      display: block; width: 100%; padding: 16px;
+      background: rgba(224,80,80,0.2);
+      color: #ff6b6b; border: 1px solid rgba(224,80,80,0.3);
+      border-radius: 100px; font-weight: 700; font-size: 15px;
+      cursor: pointer; transition: all 0.2s; margin-top: 20px;
+    }
+    .btn-logout:hover { background: #E05050; color: white; border-color: #E05050; }
+
+    /* Upload Loading Overlay */
+    .upload-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+      z-index: 500; align-items: center; justify-content: center;
+      flex-direction: column; gap: 16px;
+    }
+    .upload-overlay.active { display: flex; }
+    .upload-overlay-box {
+      background: white; border-radius: 20px;
+      padding: 32px 40px; text-align: center;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.4); min-width: 220px;
+    }
+    .upload-spinner {
+      width: 44px; height: 44px; margin: 0 auto 16px;
+      border: 4px solid #e2e8f0; border-top-color: #2c70b7;
+      border-radius: 50%; animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .upload-overlay-text { font-size: 14px; font-weight: 700; color: #0D1E35; }
+    .upload-overlay-sub { font-size: 12px; color: #64748b; margin-top: 4px; }
+
+    /* File size indicator */
+    .file-size-bar-wrap {
+      margin-top: 12px; background: rgba(255,255,255,0.08);
+      border-radius: 12px; padding: 12px 14px;
+      border: 1.5px solid rgba(255,255,255,0.15);
+    }
+    .file-size-bar-wrap.over-limit { border-color: #E05050; background: rgba(224,80,80,0.1); }
+    .file-size-header { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+    .file-size-label { color: rgba(255,255,255,0.5); }
+    .file-size-value { color: #00A2EA; }
+    .file-size-value.over { color: #E05050; }
+    .file-size-bar { height: 6px; background: rgba(255,255,255,0.12); border-radius: 100px; overflow: hidden; }
+    .file-size-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, #2C70B7, #00A2EA); transition: width 0.3s ease; }
+    .file-size-fill.over { background: linear-gradient(90deg, #E05050, #ff7070); }
+    .file-size-warning { margin-top: 8px; font-size: 12px; color: #ff6b6b; font-weight: 600; display: none; }
+    .file-size-warning.show { display: block; }
+
+    .dok-file-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px; border-radius: 10px;
+      background: rgba(255,255,255,0.08); margin-bottom: 6px;
+      border: 1px solid rgba(255,255,255,0.12); font-size: 13px; color: rgba(255,255,255,0.8);
+    }
+    .dok-file-item.over-limit { background: rgba(224,80,80,0.1); border-color: rgba(224,80,80,0.3); }
+    .dok-file-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .dok-file-size { font-size: 11px; color: rgba(255,255,255,0.4); flex-shrink: 0; }
+    .dok-file-size.over { color: #ff6b6b; font-weight: 700; }
+    .dok-file-remove { background: none; border: none; cursor: pointer; color: rgba(255,255,255,0.3); font-size: 16px; padding: 0 2px; transition: color 0.2s; flex-shrink: 0; }
+    .dok-file-remove:hover { color: #ff6b6b; }
+
+    /* Search */
+    .search-box {
+      border-radius: 100px;
+      padding: 4px 16px; display: flex; align-items: center;
+      margin-bottom: 14px;
+    }
+    .search-box input { border: none; background: transparent; flex: 1; padding: 12px 0; outline: none; font-size: 14px; }
+
+    /* Quick action buttons */
+    .qa-btn {
+      flex: 1; display: flex; align-items: center; gap: 8px;
+      padding: 14px 12px; border-radius: 14px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px; font-weight: 700;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .qa-btn i { font-size: 18px; flex-shrink: 0; }
+
+    /* No bottom nav */
+    .u-content { padding-bottom: 20px; }
+
+    /* Mobile: right panel hidden by default, shown when active */
+    @media (max-width: 899px) {
+      .u-right-panel {
+        display: none;
+        flex-direction: column;
+        padding: 10px 16px 20px;
+        overflow-y: auto;
+      }
+      .u-right-panel.active { display: flex; }
+      .u-right-panel .screen { display: none; flex-direction: column; }
+      .u-right-panel .screen.active { display: flex !important; animation: screenFadeIn 0.3s ease forwards; }
+      .desktop-right-placeholder { display: none !important; }
+      /* When right panel is active, hide left content */
+      .u-content.hidden-mobile { display: none; }
+    }
+  </style>
+</head>
+<body class="user-frame" style="padding:16px;display:flex;justify-content:center;">
+<div class="phone-shell">
+
+  <!-- Header -->
+  <div class="u-header">
+    <div class="u-topbar">
+      <div class="u-brand">
+        <button id="btnBack" onclick="goBack()" style="display:none;background:rgba(255,255,255,0.15);border:none;color:white;border-radius:10px;padding:7px 10px;cursor:pointer;font-size:18px;align-items:center;gap:5px;margin-right:4px;">
+          <i class="icon icon-chevron-left"></i>
+        </button>
+        <div class="u-brand-icon">
+          <img src="../assets/images/logo/logo-bnt.webp" alt="BNT">
+        </div>
+        <div>
+          <div class="u-brand-name">Kurban Digital</div>
+          <div class="u-brand-sub">Yayasan BNT 1447 H</div>
+        </div>
+      </div>
+      <button class="u-avatar" id="avatarInitial" onclick="switchScreen('akun')" style="cursor:pointer;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:15px;"></button>
+    </div>
+    <div class="u-greet">
+      <div class="u-hi">Assalamu'alaikum,</div>
+      <div class="u-name" id="userName">User</div>
+    </div>
+    <div class="u-kpi">
+      <div class="u-kpi-item"><div class="u-kpi-num" id="totalHewan">-</div><div class="u-kpi-lbl">Total</div></div>
+      <div class="u-kpi-item"><div class="u-kpi-num" id="selesai">-</div><div class="u-kpi-lbl">Selesai</div></div>
+      <div class="u-kpi-item"><div class="u-kpi-num" id="proses">-</div><div class="u-kpi-lbl">Proses</div></div>
+    </div>
+  </div>
+
+  <!-- Content screens -->
+  <div class="u-content">
+    <!-- BERANDA -->
+    <div id="screen-beranda" class="screen active">
+      <div class="phase-card">
+        <div class="phase-title"><i class="icon icon-bar-chart"></i> Progress Fase</div>
+        <div class="phase-steps">
+          <div class="pstep"><div class="pstep-dot" id="stepHidup">1</div><div class="pstep-lbl">Hidup</div></div>
+          <div class="pline" id="line1"></div>
+          <div class="pstep"><div class="pstep-dot" id="stepTumbang">2</div><div class="pstep-lbl">Tumbang</div></div>
+          <div class="pline" id="line2"></div>
+          <div class="pstep"><div class="pstep-dot" id="stepMati">3</div><div class="pstep-lbl">Mati</div></div>
+        </div>
+        <div class="phase-counts">
+          <div class="pc"><div class="pc-num" id="cntHidup">0</div><div class="pc-lbl"><img src="../assets/images/Icon/icon_sapi.png" style="width:13px;height:13px;object-fit:contain;vertical-align:middle;"> Hidup</div></div>
+          <div class="pc"><div class="pc-num" id="cntTumbang">0</div><div class="pc-lbl"><img src="../assets/images/Icon/ditumbangkan.webp" style="width:13px;height:13px;object-fit:contain;vertical-align:middle;"> Tumbang</div></div>
+          <div class="pc"><div class="pc-num" id="cntMati">0</div><div class="pc-lbl"><img src="../assets/images/Icon/disembelih.webp" style="width:13px;height:13px;object-fit:contain;vertical-align:middle;"> Mati</div></div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div style="display:flex;gap:10px;margin-bottom:14px;">
+        <button class="qa-btn" onclick="switchScreen('hewan')">
+          <i class="icon icon-list"></i>
+          <span>Semua Data Hewan</span>
+          <i class="icon icon-chevron-right" style="margin-left:auto;opacity:0.5;"></i>
+        </button>
+        <button class="qa-btn qa-btn-green" onclick="switchScreen('dokumentasi')">
+          <i class="icon icon-folder-plus"></i>
+          <span>Dokumentasi Instansi</span>
+          <i class="icon icon-chevron-right" style="margin-left:auto;opacity:0.5;"></i>
+        </button>
+      </div>
+
+      <div class="ucard">
+        <div class="card-head">
+          <div class="card-title"><img src="../assets/images/Icon/Hewan.webp" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;"> Hewan Terbaru</div>
+          <span class="see-all" onclick="switchScreen('hewan')">Lihat Semua →</span>
+        </div>
+        <div id="recentHewan"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right panel (desktop: col 2 | mobile: hidden, screens shown in u-content-mobile) -->
+  <div class="u-right-panel" id="uRightPanel">
+    <!-- HEWAN -->
+    <div id="screen-hewan" class="screen">
+      <div class="search-box">
+        <i class="icon icon-search"></i>
+        <input type="text" id="searchInput" placeholder="Cari nomor, pekurban, instansi...">
+      </div>
+      <!-- Filter bar -->
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+        <div class="filter-select-wrap">
+          <button class="filter-select-btn" id="uBtnWilayah" onclick="toggleUserFilter('wilayah')">
+            <span id="uLblWilayah">Semua Wilayah</span><i class="icon icon-chevron-down"></i>
+          </button>
+          <div class="filter-dropdown" id="uDdWilayah"></div>
+        </div>
+        <div class="filter-select-wrap">
+          <button class="filter-select-btn" id="uBtnInstansi" onclick="toggleUserFilter('instansi')">
+            <span id="uLblInstansi">Semua Instansi</span><i class="icon icon-chevron-down"></i>
+          </button>
+          <div class="filter-dropdown" id="uDdInstansi"></div>
+        </div>
+        <div class="filter-select-wrap">
+          <button class="filter-select-btn" id="uBtnStatus" onclick="toggleUserFilter('status')">
+            <span id="uLblStatus">Semua Status</span><i class="icon icon-chevron-down"></i>
+          </button>
+          <div class="filter-dropdown" id="uDdStatus"></div>
+        </div>
+      </div>
+      <div id="allHewanList"></div>
+    </div>
+
+    <!-- UPLOAD -->
+    <div id="screen-upload" class="screen">
+      <div id="uploadDetailCard">
+        <div class="ucard">
+          <div class="card-title"><img src="../assets/images/Icon/Hewan.webp" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;"> Detail Hewan</div>
+          <div id="selectedHewanDetail" class="detail-grid"></div>
+        </div>
+        <div class="ucard">
+          <div class="card-title"><i class="icon icon-check-circle"></i> Status Dokumentasi</div>
+          <div id="uploadStatusDisplay"></div>
+        </div>
+        <div class="ucard">
+          <div class="card-title"><i class="icon icon-camera"></i> Upload Foto</div>
+          <div class="upload-tabs" style="display:flex; gap:8px; margin-bottom:16px;">
+            <button class="upload-tab active" data-tab="hidup">
+              <img src="../assets/images/Icon/icon_sapi.png" style="width:16px;height:16px;object-fit:contain;"> Hidup
+            </button>
+            <button class="upload-tab" data-tab="ditumbangkan">
+              <img src="../assets/images/Icon/ditumbangkan.webp" style="width:16px;height:16px;object-fit:contain;"> Tumbang
+            </button>
+            <button class="upload-tab" data-tab="mati">
+              <img src="../assets/images/Icon/disembelih.webp" style="width:16px;height:16px;object-fit:contain;"> Mati
+            </button>
+          </div>
+          <div class="upload-area" id="uploadArea">
+            <i class="icon icon-upload-cloud" style="font-size:40px; margin-bottom:8px;"></i>
+            <div style="font-weight:600;">Ketuk untuk pilih foto</div>
+            <div style="font-size:12px; color:var(--muted); margin-top:4px;">JPG, PNG (maks. 5MB)</div>
+          </div>
+          <input type="file" id="fotoInput" accept="image/*" style="display:none;">
+          <div id="previewContainer" style="display:none; margin-top:16px; position:relative;">
+            <img id="previewImg" class="preview-image" style="width:100%; border-radius:var(--r-md);">
+            <button id="removePreview" style="position:absolute; top:8px; right:8px; background:rgba(0,0,0,0.6); border:none; color:white; width:32px; height:32px; border-radius:50%; cursor:pointer;"><i class="icon icon-x"></i></button>
+          </div>
+          <button class="btn-submit panitia" id="uploadBtn" style="margin-top:16px;">
+            <i class="icon icon-upload"></i> Upload Foto
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOKUMENTASI INSTANSI -->
+    <div id="screen-dokumentasi" class="screen">
+      <div class="ucard">
+        <div class="card-title"><i class="icon icon-building"></i> Pilih Instansi</div>
+        <select id="dokInstansiSelect" class="field"></select>
+        <input type="text" id="dokWilayah" class="field" placeholder="Wilayah" readonly style="background:#f5f5f5;">
+        <select id="dokJenis" class="field">
+          <option value="Pencacahan">Pencacahan</option>
+          <option value="Penyaluran">Penyaluran</option>
+        </select>
+      </div>
+      <div id="dokUploadCard" style="display:none;">
+        <div class="ucard">
+          <div class="card-title"><i class="icon icon-folder-plus"></i> Upload File</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+            <i class="icon icon-info" style="font-size:14px;color:var(--blue);"></i>
+            Batas upload sekaligus: <strong style="color:var(--blue);">20 MB</strong>
+          </div>
+          <div class="upload-area" id="dokUploadArea">
+            <i class="icon icon-upload-cloud" style="font-size:32px;"></i>
+            <div>Pilih foto/video</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">Bisa pilih beberapa file sekaligus</div>
+          </div>
+          <input type="file" id="dokFileInput" accept="image/*,video/*" multiple style="display:none;">
+          <!-- File size bar -->
+          <div class="file-size-bar-wrap" id="fileSizeBarWrap" style="display:none;">
+            <div class="file-size-header">
+              <span class="file-size-label"><i class="icon icon-hard-drive" style="font-size:12px;"></i> Total ukuran file</span>
+              <span class="file-size-value" id="fileSizeValue">0 MB / 20 MB</span>
+            </div>
+            <div class="file-size-bar">
+              <div class="file-size-fill" id="fileSizeFill" style="width:0%"></div>
+            </div>
+            <div class="file-size-warning" id="fileSizeWarning">
+              <i class="icon icon-alert-triangle" style="font-size:12px;"></i>
+              Ukuran melebihi batas! Hapus beberapa file sebelum upload.
+            </div>
+          </div>
+          <div id="dokFileList"></div>
+          <button class="btn-submit panitia" id="dokUploadBtn"><i class="icon icon-upload"></i> Upload</button>
+        </div>
+      </div>
+      <div class="ucard">
+        <div class="card-title"><i class="icon icon-history"></i> Riwayat</div>
+        <div id="dokRiwayat"></div>
+      </div>
+    </div>
+
+    <!-- AKUN / PROFIL -->
+    <div id="screen-akun" class="screen">
+      <div class="ucard">
+        <div class="card-title"><i class="icon icon-user"></i> Profil</div>
+        <div class="detail-row"><span>Username</span><span id="profileUsername">-</span></div>
+        <div class="detail-row"><span>Email</span><span id="profileEmail">-</span></div>
+        <div class="detail-row"><span>Role</span><span id="profileRole">-</span></div>
+      </div>
+
+      <div class="perf-card">
+        <div class="perf-title"><i class="icon icon-award"></i> Kinerja Anda</div>
+        <div class="perf-stats">
+          <div class="perf-stat"><div class="perf-num" id="perfHewan">0</div><div class="perf-lbl">Hewan Diupload</div></div>
+          <div class="perf-stat"><div class="perf-num" id="perfDok">0</div><div class="perf-lbl">Dok. Instansi</div></div>
+        </div>
+      </div>
+
+      <div class="perf-card">
+        <div class="perf-title"><i class="icon icon-building"></i> Instansi yang Ditangani</div>
+        <div class="instansi-list" id="instansiList"></div>
+      </div>
+
+      <button class="btn-logout" id="logoutBtn">Keluar</button>
+    </div>
+
+    <div class="desktop-right-placeholder" id="desktopPlaceholder">
+      <i class="icon icon-list"></i>
+      <span>Pilih hewan untuk upload foto</span>
+    </div>
+  </div>
+
+</div>
+
+<script src="../assets/js/api.js"></script>
+<script>
+  // ==================== AUTH CHECK ====================
+  const email = localStorage.getItem('userEmail');
+  const username = localStorage.getItem('username');
+  const role = localStorage.getItem('userRole');
+  const expiry = Number(localStorage.getItem('loginExpiry'));
+
+  if (!email || !role || isNaN(expiry) || Date.now() > expiry) {
+    localStorage.clear();
+    window.location.href = '/';
+  }
+
+  // ==================== GLOBAL STATE ====================
+  let allHewan = [];
+  let allDokumentasi = [];
+  let selectedHewan = null;
+  let currentUploadTab = 'hidup';
+  let dokInstansiList = [];
+
+  document.getElementById('userName').textContent = username || email;
+  document.getElementById('avatarInitial').textContent = (username || email).charAt(0).toUpperCase();
+  document.getElementById('profileUsername').textContent = username || email;
+  document.getElementById('profileEmail').textContent = email;
+  document.getElementById('profileRole').textContent = role === 'admin' ? 'Administrator' : 'Panitia';
+
+  function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    if (!toast) return;
+    toast.textContent = message;
+    toast.className = `toast ${type} show`;
+    clearTimeout(toast._timeout);
+    toast._timeout = setTimeout(() => {
+      toast.classList.remove('show');
+    }, 3000);
+  }
+ 
+    // ==================== UTILITIES ====================
+  function getEmoji(jenis) {
+    const j = (jenis||'').toLowerCase();
+    if (j.includes('kambing')||j.includes('domba'))
+      return '<img src="../assets/images/Icon/icon_kambing.png" style="width:28px;height:28px;object-fit:contain;">';
+    return '<img src="../assets/images/Icon/icon_sapi.png" style="width:28px;height:28px;object-fit:contain;">';
+  }
+  function getPhaseCount(status) {
+    return [status.url_hidup, status.url_ditumbangkan, status.url_mati].filter(Boolean).length;
+  }
+
+  // ==================== DATA FETCH ====================
+  async function loadAllData() {
+    try {
+      const [hewanRes, dokRes] = await Promise.all([
+        callApi('getHewan', { email }),
+        callApi('getDokumentasi', { email })
+      ]);
+      if (hewanRes.success) allHewan = hewanRes.data || [];
+      if (dokRes.success) allDokumentasi = dokRes.data || [];
+    } catch (e) {
+    }
+  }
+
+  // ==================== RENDER DASHBOARD ====================
+  async function renderDashboard() {
+    if (allHewan.length === 0) await loadAllData();
+    
+    const total = allHewan.length;
+    const hidup = allHewan.filter(h => h.status?.url_hidup).length;
+    const tumbang = allHewan.filter(h => h.status?.url_ditumbangkan).length;
+    const mati = allHewan.filter(h => h.status?.url_mati).length;
+    const selesai = allHewan.filter(h => getPhaseCount(h.status) === 3).length;
+
+    document.getElementById('totalHewan').textContent = total;
+    document.getElementById('selesai').textContent = selesai;
+    document.getElementById('proses').textContent = allHewan.filter(h => getPhaseCount(h.status) > 0 && getPhaseCount(h.status) < 3).length;
+    document.getElementById('cntHidup').textContent = hidup;
+    document.getElementById('cntTumbang').textContent = tumbang;
+    document.getElementById('cntMati').textContent = mati;
+
+    const stepHidup = document.getElementById('stepHidup');
+    const stepTumbang = document.getElementById('stepTumbang');
+    const stepMati = document.getElementById('stepMati');
+    const line1 = document.getElementById('line1');
+    const line2 = document.getElementById('line2');
+    
+    stepHidup.classList.toggle('done', hidup === total && total > 0);
+    stepTumbang.classList.toggle('done', tumbang === total && total > 0);
+    stepMati.classList.toggle('done', mati === total && total > 0);
+    line1.classList.toggle('done', hidup === total && total > 0);
+    line2.classList.toggle('done', tumbang === total && total > 0);
+    
+    if (hidup === total && total > 0) stepHidup.textContent = '✓';
+    else stepHidup.textContent = '1';
+    if (tumbang === total && total > 0) stepTumbang.textContent = '✓';
+    else stepTumbang.textContent = '2';
+    if (mati === total && total > 0) stepMati.textContent = '✓';
+    else stepMati.textContent = '3';
+
+    const recent = allHewan.slice(0, 5);
+    document.getElementById('recentHewan').innerHTML = recent.map(h => `
+      <div class="a-row" data-nomor="${esc(h.nomor_hewan)}" data-instansi="${esc(h.instansi)}" data-jenis="${esc(h.jenis_hewan)}">
+        <div class="a-ava">${getEmoji(h.jenis_hewan)}</div>
+        <div class="a-info"><div class="aname">${esc(h.nomor_hewan)}</div><div class="asub">${esc(h.instansi)}</div></div>
+        <span class="abadge ${getPhaseCount(h.status)===3?'ab-done':'ab-prgs'}">${getPhaseCount(h.status)}/3</span>
+      </div>
+    `).join('');
+    
+    document.querySelectorAll('.a-row[data-nomor]').forEach(el => {
+      el.addEventListener('click', () => selectHewanFromList(el.dataset.nomor, el.dataset.instansi, el.dataset.jenis));
+    });
+  }
+
+  // ==================== HEWAN LIST ====================
+  const userFilterState = { wilayah: '', instansi: '', status: '' };
+
+  function toggleUserFilter(key) {
+    const cap = key.charAt(0).toUpperCase() + key.slice(1);
+    const dd  = document.getElementById(`uDd${cap}`);
+    const btn = document.getElementById(`uBtn${cap}`);
+    const isOpen = dd.classList.contains('open');
+    document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.filter-select-btn').forEach(b => b.classList.remove('open'));
+    if (!isOpen) { dd.classList.add('open'); btn.classList.add('open'); }
+  }
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.filter-select-wrap')) {
+      document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('open'));
+      document.querySelectorAll('.filter-select-btn').forEach(b => b.classList.remove('open'));
+    }
+  });
+
+  function buildUserDropdown(key, options) {
+    const cap = key.charAt(0).toUpperCase() + key.slice(1);
+    const dd  = document.getElementById(`uDd${cap}`);
+    const allLabel = key === 'wilayah' ? 'Semua Wilayah' : key === 'instansi' ? 'Semua Instansi' : 'Semua Status';
+    dd.innerHTML = [{ value: '', label: allLabel }, ...options.map(o => ({ value: o, label: o }))]
+      .map(o => `<div class="filter-option${userFilterState[key]===o.value?' selected':''}" data-key="${esc(key)}" data-value="${esc(o.value)}" data-label="${esc(o.label)}">${esc(o.label)}</div>`)
+      .join('');
+    dd.querySelectorAll('.filter-option').forEach(el => {
+      el.addEventListener('click', () => selectUserFilter(el.dataset.key, el.dataset.value, el.dataset.label));
+    });
+  }
+
+  function selectUserFilter(key, value, label) {
+    userFilterState[key] = value;
+    const cap = key.charAt(0).toUpperCase() + key.slice(1);
+    document.getElementById(`uLbl${cap}`).textContent = label;
+    document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.filter-select-btn').forEach(b => b.classList.remove('open'));
+    applyHewanFilter();
+  }
+
+  function populateHewanFilters() {
+    const wilayahList  = [...new Set(allHewan.map(h => h.wilayah).filter(Boolean))].sort();
+    const instansiList = [...new Set(allHewan.map(h => h.instansi).filter(Boolean))].sort();
+    buildUserDropdown('wilayah',  wilayahList);
+    buildUserDropdown('instansi', instansiList);
+    buildUserDropdown('status',   ['hidup', 'tumbang', 'sembelih']);
+  }
+
+  function applyHewanFilter() {
+    const q        = document.getElementById('searchInput').value.toLowerCase();
+    const wilayah  = userFilterState.wilayah;
+    const instansi = userFilterState.instansi;
+    const status   = userFilterState.status;
+
+    const filtered = allHewan.filter(h => {
+      const p = getPhaseCount(h.status);
+      const statusMatch = !status ||
+        (status === 'hidup'    && !!h.status?.url_hidup && !h.status?.url_ditumbangkan) ||
+        (status === 'tumbang'  && !!h.status?.url_ditumbangkan && !h.status?.url_mati) ||
+        (status === 'sembelih' && !!h.status?.url_mati);
+      return statusMatch &&
+        (!wilayah  || h.wilayah  === wilayah) &&
+        (!instansi || h.instansi === instansi) &&
+        (!q || h.nomor_hewan.toLowerCase().includes(q) ||
+               (h.daftar_pekurban||'').toLowerCase().includes(q) ||
+               h.instansi.toLowerCase().includes(q) ||
+               h.wilayah.toLowerCase().includes(q));
+    });
+    renderHewanList(filtered);
+  }
+
+  function renderHewanList(data) {
+    if (!Array.isArray(data)) {
+      const q = typeof data === 'string' ? data : '';
+      if (allHewan.length === 0) { loadAllData().then(() => renderHewanList(allHewan)); return; }
+      data = allHewan.filter(h =>
+        !q ||
+        h.nomor_hewan.toLowerCase().includes(q.toLowerCase()) ||
+        (h.daftar_pekurban||'').toLowerCase().includes(q.toLowerCase()) ||
+        h.instansi.toLowerCase().includes(q.toLowerCase()) ||
+        h.wilayah.toLowerCase().includes(q.toLowerCase())
+      );
+    }
+    if (allHewan.length > 0) populateHewanFilters();
+    document.getElementById('allHewanList').innerHTML = data.map(h => `
+      <div class="a-row" data-nomor="${esc(h.nomor_hewan)}" data-instansi="${esc(h.instansi)}" data-jenis="${esc(h.jenis_hewan)}">
+        <div class="a-ava">${getEmoji(h.jenis_hewan)}</div>
+        <div class="a-info"><div class="aname">${esc(h.nomor_hewan)}</div><div class="asub">${esc(h.instansi)} · ${esc(h.wilayah)}</div></div>
+        <span class="abadge ${getPhaseCount(h.status)===3?'ab-done':'ab-prgs'}">${getPhaseCount(h.status)}/3</span>
+      </div>
+    `).join('') || '<div style="color:rgba(255,255,255,0.4);text-align:center;padding:24px;font-size:13px;">Tidak ada data</div>';
+    document.querySelectorAll('#allHewanList .a-row').forEach(el => {
+      el.addEventListener('click', () => selectHewanFromList(el.dataset.nomor, el.dataset.instansi, el.dataset.jenis));
+    });
+  }
+
+  function selectHewanFromList(nomor, instansi, jenis) {
+    selectedHewan = allHewan.find(h =>
+      h.nomor_hewan === nomor &&
+      h.instansi    === instansi &&
+      h.jenis_hewan === jenis
+    );
+    if (selectedHewan) switchScreen('upload');
+  }
+
+  // ==================== UPLOAD ====================
+  function renderUploadDetail() {
+    if (!selectedHewan) {
+      switchScreen('hewan');
+      return;
+    }
+    const s = selectedHewan.status || {};
+
+    document.getElementById('selectedHewanDetail').innerHTML = `
+      <div class="detail-row"><span class="detail-label">Nomor</span><span class="detail-value">${esc(selectedHewan.nomor_hewan)}</span></div>
+      <div class="detail-row"><span class="detail-label">Jenis</span><span class="detail-value">${esc(selectedHewan.jenis_hewan)}</span></div>
+      <div class="detail-row"><span class="detail-label">Pekurban</span><span class="detail-value">${esc(selectedHewan.daftar_pekurban||'-')}</span></div>
+      <div class="detail-row"><span class="detail-label">Instansi</span><span class="detail-value">${esc(selectedHewan.instansi)}</span></div>
+      <div class="detail-row"><span class="detail-label">Wilayah</span><span class="detail-value">${esc(selectedHewan.wilayah)}</span></div>
+    `;
+
+    const statusDiv = document.getElementById('uploadStatusDisplay');
+    statusDiv.innerHTML = `
+      <div class="status-item ${s.url_hidup ? 'done' : ''}">
+        <img src="../assets/images/Icon/icon_sapi.png" style="width:20px;height:20px;object-fit:contain;flex-shrink:0;">
+        <span>Hidup</span>
+        <span class="status-date">${s.tgl_hidup ? new Date(s.tgl_hidup).toLocaleDateString('id-ID') : 'Belum'}</span>
+      </div>
+      <div class="status-item ${s.url_ditumbangkan ? 'done' : ''}">
+        <img src="../assets/images/Icon/ditumbangkan.webp" style="width:20px;height:20px;object-fit:contain;flex-shrink:0;">
+        <span>Ditumbangkan</span>
+        <span class="status-date">${s.tgl_ditumbangkan ? new Date(s.tgl_ditumbangkan).toLocaleDateString('id-ID') : 'Belum'}</span>
+      </div>
+      <div class="status-item ${s.url_mati ? 'done' : ''}">
+        <img src="../assets/images/Icon/disembelih.webp" style="width:20px;height:20px;object-fit:contain;flex-shrink:0;">
+        <span>Mati / Disembelih</span>
+        <span class="status-date">${s.tgl_mati ? new Date(s.tgl_mati).toLocaleDateString('id-ID') : 'Belum'}</span>
+      </div>
+    `;
+
+    if (!s.url_hidup) currentUploadTab = 'hidup';
+    else if (!s.url_ditumbangkan) currentUploadTab = 'ditumbangkan';
+    else currentUploadTab = 'mati';
+    
+    document.querySelectorAll('.upload-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.tab === currentUploadTab);
+      if (t.dataset.tab === 'hidup') {
+        t.classList.remove('disabled');
+      } else if (t.dataset.tab === 'ditumbangkan') {
+        t.classList.toggle('disabled', !s.url_hidup);
+      } else if (t.dataset.tab === 'mati') {
+        t.classList.toggle('disabled', !s.url_ditumbangkan);
+      }
+    });
+  }
+
+  function setupUploadListeners() {
+    const uploadArea = document.getElementById('uploadArea');
+    const fotoInput = document.getElementById('fotoInput');
+    const previewContainer = document.getElementById('previewContainer');
+    const previewImg = document.getElementById('previewImg');
+    const removePreview = document.getElementById('removePreview');
+
+    uploadArea.addEventListener('click', () => fotoInput.click());
+    fotoInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          previewImg.src = ev.target.result;
+          previewContainer.style.display = 'block';
+          uploadArea.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+    removePreview.addEventListener('click', () => {
+      previewContainer.style.display = 'none';
+      uploadArea.style.display = 'block';
+      fotoInput.value = '';
+    });
+
+    document.querySelectorAll('.upload-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        if (tab.classList.contains('disabled')) return;
+        currentUploadTab = tab.dataset.tab;
+        document.querySelectorAll('.upload-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+
+    document.getElementById('uploadBtn').addEventListener('click', async () => {
+      if (!selectedHewan) return showToast('Pilih hewan terlebih dahulu', 'warning');
+      const file = fotoInput.files[0];
+      if (!file) return showToast('Pilih foto', 'warning');
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) return showToast('Tipe file tidak diizinkan. Gunakan JPG, PNG, atau WebP', 'warning');
+      if (file.size > 5 * 1024 * 1024) return showToast('Ukuran foto melebihi 5 MB', 'warning');
+
+      const btn = document.getElementById('uploadBtn');
+      const overlay = document.getElementById('uploadOverlay');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="icon icon-loader"></i> Mengupload...';
+      overlay.classList.add('active');
+      document.getElementById('uploadOverlayText').textContent = 'Mengupload foto...';
+
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const base64 = e.target.result.split(',')[1];
+        try {
+          const result = await callApi('uploadFoto', {
+            username:    username || email,
+            nomor_hewan: selectedHewan.nomor_hewan,
+            jenis_hewan: selectedHewan.jenis_hewan,
+            instansi:    selectedHewan.instansi,
+            jenis_foto:  currentUploadTab,
+            base64Data:  base64,
+            mimeType:    file.type
+          });
+          if (result.success) {
+            showToast('Foto berhasil diupload!', 'success');
+            invalidateCache('getHewan');
+            await loadAllData();
+            selectedHewan = allHewan.find(h =>
+              h.nomor_hewan === selectedHewan.nomor_hewan &&
+              h.instansi    === selectedHewan.instansi &&
+              h.jenis_hewan === selectedHewan.jenis_hewan
+            );
+            renderUploadDetail();
+            previewContainer.style.display = 'none';
+            uploadArea.style.display = 'block';
+            fotoInput.value = '';
+            renderDashboard();
+          } else {
+            showToast('Gagal: ' + (result.error || 'Unknown error'), 'error');
+          }
+        } catch (error) {
+          showToast('Error: ' + error.message, 'error');
+        }
+        btn.disabled = false;
+        btn.innerHTML = '<i class="icon icon-upload"></i> Upload Foto';
+        overlay.classList.remove('active');
+      };
+      reader.onerror = () => {
+        showToast('Gagal membaca file', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="icon icon-upload"></i> Upload Foto';
+        overlay.classList.remove('active');
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ==================== DOKUMENTASI ====================
+  async function initDokScreen() {
+    if (allHewan.length === 0) await loadAllData();
+
+    const instansiMap = new Map();
+    allHewan.forEach(h => {
+      if (h.instansi && h.wilayah && !instansiMap.has(h.instansi)) {
+        instansiMap.set(h.instansi, h.wilayah);
+      }
+    });
+    dokInstansiList = Array.from(instansiMap.entries()).map(([instansi, wilayah]) => ({ instansi, wilayah }));
+
+    const select = document.getElementById('dokInstansiSelect');
+    select.innerHTML = '<option value="">-- Pilih Instansi --</option>';
+    dokInstansiList.forEach(item => {
+      const opt = document.createElement('option');
+      opt.value = item.instansi;
+      opt.textContent = `${item.instansi} (${item.wilayah})`;
+      opt.dataset.wilayah = item.wilayah;
+      select.appendChild(opt);
+    });
+
+    document.getElementById('dokWilayah').value = '';
+    document.getElementById('dokUploadCard').style.display = 'none';
+    document.getElementById('dokFileList').innerHTML = '';
+    document.getElementById('dokFileInput').value = '';
+
+    select.onchange = function() {
+      const opt = this.options[this.selectedIndex];
+      if (opt.value) {
+        document.getElementById('dokWilayah').value = opt.dataset.wilayah;
+        document.getElementById('dokUploadCard').style.display = 'block';
+      } else {
+        document.getElementById('dokWilayah').value = '';
+        document.getElementById('dokUploadCard').style.display = 'none';
+      }
+    };
+
+    loadDokRiwayat();
+    setupDokUploadListeners();
+  }
+
+  function setupDokUploadListeners() {
+    const dokArea = document.getElementById('dokUploadArea');
+    const dokInput = document.getElementById('dokFileInput');
+    dokArea.replaceWith(dokArea.cloneNode(true));
+    document.getElementById('dokUploadArea').addEventListener('click', () => dokInput.click());
+
+    const MAX_BYTES = 20 * 1024 * 1024;
+    let selectedFiles = [];
+
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    function updateFileSizeUI() {
+      const barWrap  = document.getElementById('fileSizeBarWrap');
+      const fillEl   = document.getElementById('fileSizeFill');
+      const valueEl  = document.getElementById('fileSizeValue');
+      const warnEl   = document.getElementById('fileSizeWarning');
+      const uploadBtn = document.getElementById('dokUploadBtn');
+
+      if (selectedFiles.length === 0) {
+        barWrap.style.display = 'none';
+        return;
+      }
+      barWrap.style.display = 'block';
+
+      const total   = selectedFiles.reduce((s, f) => s + f.size, 0);
+      const pct     = Math.min((total / MAX_BYTES) * 100, 100);
+      const isOver  = total > MAX_BYTES;
+
+      valueEl.textContent = `${formatSize(total)} / 20 MB`;
+      valueEl.classList.toggle('over', isOver);
+      fillEl.style.width = pct + '%';
+      fillEl.classList.toggle('over', isOver);
+      barWrap.classList.toggle('over-limit', isOver);
+      warnEl.classList.toggle('show', isOver);
+      uploadBtn.disabled = isOver;
+      uploadBtn.style.opacity = isOver ? '0.5' : '1';
+    }
+
+    function renderFileList() {
+      const listDiv = document.getElementById('dokFileList');
+      if (selectedFiles.length === 0) { listDiv.innerHTML = ''; return; }
+
+      const total  = selectedFiles.reduce((s, f) => s + f.size, 0);
+      const isOver = total > MAX_BYTES;
+
+      listDiv.innerHTML = selectedFiles.map((f, idx) => {
+        const icon = f.type.startsWith('image/') ? 'icon-image' : 'icon-film';
+        return `
+          <div class="dok-file-item ${isOver ? 'over-limit' : ''}">
+            <i class="icon ${icon}" style="font-size:16px;color:var(--blue);flex-shrink:0;"></i>
+            <span class="dok-file-name">${f.name}</span>
+            <span class="dok-file-size ${isOver ? 'over' : ''}">${formatSize(f.size)}</span>
+            <button class="dok-file-remove" onclick="removeDokFile(${idx})" title="Hapus file ini">
+              <i class="icon icon-x"></i>
+            </button>
+          </div>`;
+      }).join('');
+    }
+
+    window.removeDokFile = (idx) => {
+      selectedFiles.splice(idx, 1);
+      renderFileList();
+      updateFileSizeUI();
+    };
+
+    dokInput.addEventListener('change', (e) => {
+      const newFiles = Array.from(e.target.files);
+      newFiles.forEach(nf => {
+        if (!selectedFiles.some(sf => sf.name === nf.name && sf.size === nf.size)) {
+          selectedFiles.push(nf);
+        }
+      });
+      dokInput.value = '';
+      renderFileList();
+      updateFileSizeUI();
+    });
+
+    document.getElementById('dokUploadBtn').addEventListener('click', async () => {
+      const instansi = document.getElementById('dokInstansiSelect').value;
+      const wilayah  = document.getElementById('dokWilayah').value;
+      const jenis    = document.getElementById('dokJenis').value;
+      if (!instansi) return showToast('Pilih instansi terlebih dahulu', 'warning');
+      if (selectedFiles.length === 0) return showToast('Pilih file terlebih dahulu', 'warning');
+
+      const total = selectedFiles.reduce((s, f) => s + f.size, 0);
+      if (total > MAX_BYTES) return showToast('Ukuran file melebihi batas 20 MB', 'warning');
+
+      const overlay = document.getElementById('uploadOverlay');
+      const btn     = document.getElementById('dokUploadBtn');
+      btn.disabled  = true;
+      overlay.classList.add('active');
+      document.getElementById('uploadOverlayText').textContent = `Mengupload ${selectedFiles.length} file...`;
+
+      const filePromises = selectedFiles.map(f => new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = e => resolve({ base64Data: e.target.result.split(',')[1], mimeType: f.type, fileName: f.name });
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(f);
+      }));
+      const fileData = (await Promise.all(filePromises)).filter(f => f !== null);
+
+      try {
+        const result = await callApi('uploadDokumentasi', {
+          email, username: username || email, instansi, wilayah, jenis_dokumentasi: jenis, files: fileData
+        });
+        if (result.success) {
+          showToast(`Berhasil upload ${result.fotoCount || 0} foto, ${result.videoCount || 0} video`, 'success');
+          invalidateCache('getDokumentasi');
+          selectedFiles = [];
+          renderFileList();
+          updateFileSizeUI();
+          loadDokRiwayat();
+        } else {
+          showToast('Gagal: ' + (result.error || 'Unknown error'), 'error');
+        }
+      } catch (error) {
+        showToast('Error: ' + error.message, 'error');
+      }
+      btn.disabled = false;
+      overlay.classList.remove('active');
+    });
+  }
+
+  async function loadDokRiwayat() {
+    const container = document.getElementById('dokRiwayat');
+    container.innerHTML = '<div class="instansi-item">Memuat...</div>';
+    try {
+      const result = await callApi('getDokumentasi', { email });
+      if (result.success && result.data) {
+        if (result.data.length === 0) {
+          container.innerHTML = '<div class="instansi-item">Belum ada dokumentasi</div>';
+          return;
+        }
+        container.innerHTML = result.data.map(d => `
+          <div class="instansi-item">
+            <div><strong>${esc(d.instansi)} (${esc(d.wilayah)})</strong> - ${esc(d.jenis)}</div>
+            <div style="font-size:12px; color:rgba(255,255,255,0.4);">${d.tglUpload ? new Date(d.tglUpload).toLocaleDateString('id-ID') : '-'} oleh ${esc(d.uploader)}</div>
+            ${d.folderUrl && d.folderUrl.startsWith('http') ? `<a href="${esc(d.folderUrl)}" target="_blank" rel="noopener noreferrer" style="color:#00A2EA;font-size:12px;font-weight:600;"><i class="icon icon-folder" style="font-size:12px;"></i> Buka Folder</a>` : ''}
+          </div>
+        `).join('');
+      } else {
+        container.innerHTML = '<div class="instansi-item">Gagal memuat riwayat</div>';
+      }
+    } catch (e) {
+      container.innerHTML = '<div class="instansi-item">Error memuat data</div>';
+    }
+  }
+
+  // ==================== PROFIL & KINERJA ====================
+  function renderProfilePerformance() {
+    const uploadedHewan = allHewan.filter(h => 
+      (h.status?.uploader_hidup === username || h.status?.uploader_hidup === email) ||
+      (h.status?.uploader_ditumbangkan === username || h.status?.uploader_ditumbangkan === email) ||
+      (h.status?.uploader_mati === username || h.status?.uploader_mati === email)
+    );
+    const uniqueHewan = new Set(uploadedHewan.map(h => h.nomor_hewan));
+    document.getElementById('perfHewan').textContent = uniqueHewan.size;
+
+    const uploadedDok = allDokumentasi.filter(d => d.uploader === username || d.uploader === email);
+    document.getElementById('perfDok').textContent = uploadedDok.length;
+
+    const instansiSet = new Set();
+    uploadedHewan.forEach(h => { if (h.instansi) instansiSet.add(h.instansi); });
+    uploadedDok.forEach(d => { if (d.instansi) instansiSet.add(d.instansi); });
+    const listDiv = document.getElementById('instansiList');
+    if (instansiSet.size === 0) {
+      listDiv.innerHTML = '<div class="instansi-item">Belum ada instansi</div>';
+    } else {
+      listDiv.innerHTML = Array.from(instansiSet).sort().map(i => `<div class="instansi-item">${esc(i)}</div>`).join('');
+    }
+  }
+
+  // ==================== NAVIGATION ====================
+  const isDesktop = () => window.innerWidth >= 900;
+
+  function switchScreen(screenId, pushState = true) {
+    const desktop = isDesktop();
+
+    if (desktop) {
+      document.getElementById('screen-beranda').classList.add('active');
+
+      document.querySelectorAll('.u-right-panel .screen').forEach(s => s.classList.remove('active'));
+
+      const placeholder = document.getElementById('desktopPlaceholder');
+      if (screenId !== 'beranda') {
+        const target = document.getElementById(`screen-${screenId}`);
+        if (target) target.classList.add('active');
+        if (placeholder) placeholder.style.display = 'none';
+      } else {
+        if (placeholder) placeholder.style.display = 'flex';
+      }
+    } else {
+      const uContent    = document.querySelector('.u-content');
+      const uRightPanel = document.getElementById('uRightPanel');
+      const btnBack     = document.getElementById('btnBack');
+
+      if (screenId === 'beranda') {
+        uContent.classList.remove('hidden-mobile');
+        uRightPanel.classList.remove('active');
+        document.querySelectorAll('.u-right-panel .screen').forEach(s => s.classList.remove('active'));
+        document.getElementById('screen-beranda').classList.add('active');
+        if (btnBack) btnBack.style.display = 'none';
+      } else {
+        uContent.classList.add('hidden-mobile');
+        uRightPanel.classList.add('active');
+        document.querySelectorAll('.u-right-panel .screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(`screen-${screenId}`)?.classList.add('active');
+        if (btnBack) btnBack.style.display = 'flex';
+      }
+    }
+
+    if (pushState) history.pushState({ screen: screenId }, '', window.location.pathname);
+
+    if (screenId === 'beranda') renderDashboard();
+    else if (screenId === 'hewan') { populateHewanFilters(); applyHewanFilter(); }
+    else if (screenId === 'upload') renderUploadDetail();
+    else if (screenId === 'dokumentasi') initDokScreen();
+    else if (screenId === 'akun') renderProfilePerformance();
+  }
+
+  function goBack() {
+    if (!isDesktop()) {
+      switchScreen('beranda');
+    } else {
+      history.back();
+    }
+  }
+
+  window.addEventListener('popstate', (e) => {
+    const screen = e.state?.screen || 'beranda';
+    switchScreen(screen, false);
+  });
+
+  window.addEventListener('resize', () => {
+    if (isDesktop()) {
+      document.getElementById('screen-beranda').classList.add('active');
+      const hasActiveRight = !!document.querySelector('.u-right-panel .screen.active');
+      document.getElementById('desktopPlaceholder').style.display = hasActiveRight ? 'none' : 'flex';
+    }
+  });
+
+  history.replaceState({ screen: 'beranda' }, '', window.location.pathname);
+
+  document.querySelectorAll('[data-screen]').forEach(el => {
+    el.addEventListener('click', () => switchScreen(el.dataset.screen));
+  });
+
+  document.getElementById('searchInput').addEventListener('input', debounce(applyHewanFilter, 300));
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    localStorage.clear();
+    window.location.href = '/';
+  });
+
+  setInterval(() => {
+    const exp = Number(localStorage.getItem('loginExpiry'));
+    if (!exp || Date.now() > exp) {
+      localStorage.clear();
+      window.location.href = '/';
+    }
+  }, 60_000);
+
+  (async () => {
+    await loadAllData();
+    renderDashboard();
+    setupUploadListeners();
+    if (isDesktop()) {
+      document.getElementById('screen-beranda').classList.add('active');
+      const ph = document.getElementById('desktopPlaceholder');
+      if (ph) ph.style.display = 'flex';
+    }
+  })();
+</script>
+<div id="toast" class="toast"></div>
+
+<!-- Upload Loading Overlay -->
+<div class="upload-overlay" id="uploadOverlay">
+  <div class="upload-overlay-box">
+    <div class="upload-spinner"></div>
+    <div class="upload-overlay-text" id="uploadOverlayText">Mengupload...</div>
+    <div class="upload-overlay-sub">Mohon tunggu, jangan tutup halaman</div>
+  </div>
+</div>
+</body>
+</html>
